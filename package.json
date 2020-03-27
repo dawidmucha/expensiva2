@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --open --mode development",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "mongod": "c:\\Users\\dawid\\Programy\\MongoDB\\bin\\mongod --dbpath=c:\\Users\\dawid\\Programy\\MongoDB\\db",
+    "mongo": "c:\\Users\\dawid\\Programy\\MongoDB\\bin\\mongo"
   },
   "repository": {
     "type": "git",
