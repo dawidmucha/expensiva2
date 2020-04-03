@@ -9,7 +9,6 @@ collections:
 		- time format
 		- currency symbol
 		- currency affix
-		- time format
 	- categories
 		- category
 			- subcategory

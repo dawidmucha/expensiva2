@@ -10,4 +10,9 @@ router.delete('/user/:id', UserCtrl.deleteUser)
 router.get('/user/:id', UserCtrl.getUserById)
 router.get('/users', UserCtrl.getUsers)
 
+router.put('/user/:id/categories', UserCtrl.addCategory)
+router.delete('/user/:id/categories', UserCtrl.removeCategory)
+router.put('/user/:id/subcategories', UserCtrl.addSubcategory)
+router.delete('/user/:id/subcategories', UserCtrl.removeSubcategory)
+
 module.exports = router
