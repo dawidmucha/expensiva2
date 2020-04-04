@@ -1,8 +1,12 @@
+const bcrypt = require('bcrypt')
 const _ = require('lodash')
 const User = require('../models/user-model')
 
+const SALT_ROUNDS = 10
+
 createUser = (req, res) => {
 	const body = req.body
+	let user
 
 	if (!body) {
 		return res.status(400).json({
@@ -10,28 +14,27 @@ createUser = (req, res) => {
 			error: 'You must provide a user',
 		})
 	}
+	
+	bcrypt.hash(body.password, SALT_ROUNDS, (err, hash) => {
+		if(err) return console.log('error while hashing password!', err)
+		const bodyWithHashedPassword = { ...body, password: hash }
+		user = new User(bodyWithHashedPassword)
 
-	const user = new User(body)
-
-	if (!user) {
-		return res.status(400).json({ success: false, error: err })
-	}
-
-	user
-		.save()
-		.then(() => {
+		if (!user) { res.status(400).json({ success: false, error: 'err' }) }
+	
+		user.save().then(() => {
 			return res.status(201).json({
 				success: true,
 				id: user._id,
 				message: 'User created!',
 			})
-		})
-		.catch(error => {
+		}).catch(error => {
 			return res.status(400).json({
 				error,
 				message: 'User not created!',
 			})
 		})
+	})
 }
 
 updateUser = async (req, res) => {
