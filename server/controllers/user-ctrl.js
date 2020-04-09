@@ -1,5 +1,7 @@
+
 const bcrypt = require('bcrypt')
 const _ = require('lodash')
+const jwt = require('jsonwebtoken')
 const User = require('../models/user-model')
 
 const SALT_ROUNDS = 10
@@ -118,6 +120,54 @@ getUsers = async (req, res) => {
 		}
 		return res.status(200).json({ success: true, data: users })
 	}).catch(err => console.log(err))
+}
+
+authenticateToken = (req, res, next) => {
+	const authHeader = req.headers['authorization']
+	const token = authHeader && authHeader.split(' ')[1]
+	if(token === null) res.status(401).json({
+		success: false,
+		error: "authorization problem. token not found"
+	})
+
+	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+		if(err) return res.status(403).json({ success: false, error: 'token expired' }) 
+		req.user = user
+		next()
+	})
+}
+
+generateAccessToken = (user) => {
+	return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30s' })
+}
+
+let refreshTokens = []
+
+createToken = (req, res) => {
+	const refreshToken = res.body.token
+	if(refreshToken === null) return res.status(401)
+	if(refreshTokens.includes(refreshToken)) return res.status(403)
+	jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+		if(err) return res.status(403)
+	})
+	const accessToken = generateAccessToken({ name: user.name })
+	res.json({ accessToken })
+}
+
+logOutUser = (req, res) => {
+	refreshTokens = refreshTokens.filter(token => {
+		return token !== req.body.token
+	})
+}
+
+logInUser = (req, res) => {
+	const username = req.body.username
+	user = { name: username }
+
+	console.log(process.env.ACCESS_TOKEN_SECRET)
+	const accessToken = generateAccessToken(user)
+	const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
+	res.json({ accessToken, refreshToken })
 }
 
 addCategory = async (req, res) => {
@@ -263,6 +313,10 @@ module.exports = {
 	deleteUser,
 	getUsers,
 	getUserById,
+	authenticateToken,
+	createToken,
+	logOutUser,
+	logInUser,
 	addCategory,
 	removeCategory,
 	addSubcategory,
