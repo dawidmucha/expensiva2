@@ -1,4 +1,3 @@
-
 const bcrypt = require('bcrypt')
 const _ = require('lodash')
 const jwt = require('jsonwebtoken')
@@ -53,7 +52,7 @@ updateUser = async (req, res) => {
 		if (err || !user) {
 			return res.status(404).json({
 				err,
-				message: 'User not found!',
+				message: 'User not found!'
 			})
 		}
 		user.settings = {...user.settings, ...body.settings}

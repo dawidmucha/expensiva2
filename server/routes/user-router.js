@@ -2,19 +2,19 @@ const express = require('express')
 
 const UserCtrl = require('../controllers/user-ctrl')
 
-const router = express.Router()
+const userRouter = express.Router()
 
-router.post('/user', UserCtrl.createUser)
-router.put('/user/:id', UserCtrl.updateUser)
-router.delete('/user/:id', UserCtrl.deleteUser)
-router.get('/user/:id', UserCtrl.authenticateToken, UserCtrl.getUserById)
-router.get('/users', UserCtrl.getUsers)
-router.post('/login', UserCtrl.logInUser)
-router.delete('/logout', UserCtrl.logOutUser)
+userRouter.post('/user', UserCtrl.createUser)
+userRouter.put('/user/:id', UserCtrl.updateUser)
+userRouter.delete('/user/:id', UserCtrl.deleteUser)
+userRouter.get('/user/:id', UserCtrl.authenticateToken, UserCtrl.getUserById)
+userRouter.get('/users', UserCtrl.getUsers)
+userRouter.post('/login', UserCtrl.logInUser)
+userRouter.delete('/logout', UserCtrl.logOutUser)
 
-router.put('/user/:id/categories', UserCtrl.addCategory)
-router.delete('/user/:id/categories', UserCtrl.removeCategory)
-router.put('/user/:id/subcategories', UserCtrl.addSubcategory)
-router.delete('/user/:id/subcategories', UserCtrl.removeSubcategory)
+userRouter.put('/user/:id/categories', UserCtrl.addCategory)
+userRouter.delete('/user/:id/categories', UserCtrl.removeCategory)
+userRouter.put('/user/:id/subcategories', UserCtrl.addSubcategory)
+userRouter.delete('/user/:id/subcategories', UserCtrl.removeSubcategory)
 
-module.exports = router
+module.exports = userRouter
